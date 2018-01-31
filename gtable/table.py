@@ -343,13 +343,15 @@ class Table:
                     self.add_column(key, value)
 
     def __getstate__(self):
-        index = self.index
+
+        index = self.index.copy()
         data = [d.copy() for d in self.data]
         keys = self.keys[:]
 
         return index, data, keys
 
     def __setstate__(self, state):
+
         index, data, keys = state
         self.index = index
         self.data = data
