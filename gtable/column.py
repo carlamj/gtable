@@ -128,9 +128,8 @@ class Column:
 
         if np.any(bool_index):
             new_values[bool_index] = self.values
-            new_values[~bool_index] = fillvalue
-        else:
-            new_values[~bool_index] = fillvalue
+
+        new_values[~bool_index] = fillvalue
 
         self.values = new_values
         self.index = np.ones(len(self.index))
