@@ -124,8 +124,14 @@ class Column:
         :return:
         """
         new_values = np.empty(len(self.index), dtype=self.values.dtype)
-        new_values[self.index.astype(np.bool_)] = self.values
-        new_values[~self.index.astype(np.bool_)] = fillvalue
+        bool_index = self.index.astype(np.bool_)
+
+        if np.any(bool_index):
+            new_values[bool_index] = self.values
+            new_values[~bool_index] = fillvalue
+        else:
+            new_values[~bool_index] = fillvalue
+
         self.values = new_values
         self.index = np.ones(len(self.index))
 
