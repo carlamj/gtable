@@ -57,7 +57,7 @@ class Table:
                 # TODO: Remove ASAP
                 # You may get a list of Timestamps. Specific to NFQ
                 if len(v) > 0 and type(v[0]) == pd.Timestamp:
-                    self.data.append(pd.DatetimeIndex(v).values)
+                    self.data.append(np.array(pd.DatetimeIndex(v).values, dtype='datetime64[ns]'))
                 else:
                     self.data.append(np.array(v))
                 self.keys.append(k)
@@ -66,13 +66,16 @@ class Table:
             elif type(v) == np.ndarray:
                 if not len(v.shape) == 1:
                     raise ValueError("Only 1D arrays supported")
-                self.data.append(v)
+                if v.dtype.kind == 'M':
+                    self.data.append(v.astype('datetime64[ns]'))
+                else:
+                    self.data.append(v)
                 self.keys.append(k)
                 length_last = _check_length(i, k, v.shape[0], length_last)
 
             # Pandas DatetimeIndex is supported for convenience.
             elif type(v) == pd.DatetimeIndex:
-                self.data.append(np.array(v))
+                self.data.append(np.array(v, dtype='datetime64[ns]'))
                 self.keys.append(k)
                 length_last = _check_length(i, k, v.shape[0], length_last)
                 
